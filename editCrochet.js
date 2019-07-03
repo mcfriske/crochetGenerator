@@ -31,6 +31,17 @@ sliderRow.oninput = function() {
   outputRow.innerHTML = this.value;
 }
 
-html2canvas(document.querySelector("#saveButton")).then(canvas => {
-    document.body.appendChild(canvas)
-});
+// html2canvas(document.querySelector("#saveButton")).then(canvas => {
+//     document.body.appendChild(canvas)
+// });
+
+document.querySelector('#radioMode').onchange = function(e) { 
+  var id = e.target.id;
+  if (id === "dataMode") {
+    document.getElementById("dataInputs").classList.remove('hidden');
+    // document.getElementById("sliders").classList.add('hidden');
+  } else {
+    // document.getElementById("sliders").classList.remove('hidden');
+    document.getElementById("dataInputs").classList.add('hidden');
+  }
+};

@@ -20,8 +20,8 @@
 	<div class="col-2a" id="editColumn">
 
 		<div id="patternMobile"></div>
-
-		<div class="parameters">
+		<div class="radios row">
+		<div id="radioMode" class="parameters col-6">
 			<label class="container">Randomize
 			  <input type="radio" checked="checked" name="radioPattern" id="randomizeMode">
 			  <span class="checkmark"></span>
@@ -30,9 +30,13 @@
 			  <input type="radio" name="radioPattern" id="likelyMode">
 			  <span class="checkmark"></span>
 			</label>
+			<label class="container">Data <!-- Changed normal to Likely since normal doesn't do much, need to disable row radio -->
+			  <input type="radio" name="radioPattern" id="dataMode">
+			  <span class="checkmark"></span>
+			</label>
 		</div>
 
-		<div class="parameters">
+		<div class="parameters col-6">
 			<label class="container">Rounds
 			  <input type="radio" checked="checked" name="radioConstruction" id="roundsMode">
 			  <span class="checkmark"></span>
@@ -42,20 +46,38 @@
 			  <span class="checkmark"></span>
 			</label>
 		</div>
+	</div>
 
 		<!-- Sliders -->
-		<div class="parameters">
-			<span style="font-weight: 700; color: #040707;">Number of initial stitches: <span id="demoStitch"></span></span>
-			<div class="slidecontainer">
-				<input type="range" min="3" max="10" value="8" class="slider" id="myRangeStitch">
+		<div id="sliders" class="sliders row">
+			<div class="parameters col-6">
+				<label for="stitchRange" class="input-label">Number of initial stitches: <span id="demoStitch"></span></label>
+				<div class="slidecontainer">
+					<input type="range" min="3" max="10" value="8" class="slider" id="myRangeStitch" name="stitchRange">
+				</div>
+			</div>
+
+			<div class="parameters col-6">
+				<label for="rowRange" class="input-label">Number of rows or rounds: <span id="demoRow"></span></label>
+				<div class="slidecontainer">
+					<input type="range" min="3" max="10" value="8" class="slider" id="myRangeRow" name="rowRange">
+				</div>
 			</div>
 		</div>
 
-		<div class="parameters">
-			<span style="font-weight: 700; color: #040707;">Number of rows or rounds: <span id="demoRow"></span></span>
-			<div class="slidecontainer">
-				<input type="range" min="3" max="10" value="8" class="slider" id="myRangeRow">
+		<div id="dataInputs" class="data-inputs row hidden">
+			<div class="parameters col-6">
+				<label class="input-label" for="csv-data">Paste CSV data:<br>
+					<textarea id="csv-data" name="csv-data"></textarea>
+				</label>
 			</div>
+			<div class="parameters col-6">
+				<label class="input-label" for="analyze">Analyze:<br>
+					<input type="text" class="text" id="analyze" name="analyze">
+				</label>
+			</div>
+
+
 		</div>
 		
 	</div>
@@ -65,11 +87,12 @@
 			<button onclick="savePattern()" id="saveButton">Save</button>
 	</div>
 
-	<div style="width: 100%;">
-		<!-- <span style="font-weight: 700; color: #666;">Word Pattern</span> -->
-		<!-- for the word pattern javascript -->
+
+	<!-- for the word pattern javascript -->
+	<!-- <div style="width: 100%;">
+		<span style="font-weight: 700; color: #666;">Word Pattern</span>
 		<div id="patternDiv"></div> 
-	</div>
+	</div> -->
 
 
 
@@ -121,7 +144,8 @@
 
 			</div>
 	</div>
-
+	  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+    <script src="dataAnalyzer.js"></script>
     <script src="editCrochet.js"></script>
     <script src="visCrochet.js"></script>
     <script src="html2canvas.js"></script>
