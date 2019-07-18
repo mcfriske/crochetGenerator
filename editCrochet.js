@@ -37,11 +37,11 @@ sliderRow.oninput = function() {
 
 document.querySelector('#radioMode').onchange = function(e) { 
   var id = e.target.id;
-  if (id === "dataMode") {
-    document.getElementById("dataInputs").classList.remove('hidden');
+  if (id === "weightedMode") {
+    document.getElementById("numRows").classList.remove('hidden');
     // document.getElementById("sliders").classList.add('hidden');
   } else {
     // document.getElementById("sliders").classList.remove('hidden');
-    document.getElementById("dataInputs").classList.add('hidden');
+    document.getElementById("numRows").classList.add('hidden');
   }
 };

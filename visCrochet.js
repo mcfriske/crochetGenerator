@@ -317,9 +317,10 @@ function draw() {
   var pattern = " ";
   var patternArray = [];
 
-  var randomCheck = document.getElementById("randomizeMode").checked;
-  var roundCheck = document.getElementById("roundsMode").checked;
-  var dataCheck = document.getElementById("dataMode").checked;
+  var randomCheck = document.getElementById("randomizeMode") ? document.getElementById("randomizeMode").checked : false;
+  var roundCheck = document.getElementById("roundsMode") ? document.getElementById("roundsMode").checked : false;
+  var dataCheck = document.getElementById("dataMode") ? document.getElementById("dataMode").checked : false;
+  
 
 
 

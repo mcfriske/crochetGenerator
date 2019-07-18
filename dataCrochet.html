@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700, 800,900" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="crochetGenerator.css">
     </head>
-    <title>Crochet Pattern Generator</title>
+    <title>Data to Crochet Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <body>
@@ -15,7 +15,7 @@
 			<img src="generatorLogo.png" style="float: left; height: 45px;">
 			<!-- <div id="siteHeader"><h2>Crochet generator</h2></div> -->
 		</div>
-		<a id="headerButton" href="/dataCrochet.html">NEW! Data to Crochet</a>
+		<a id="headerButton" href="/crochetGenerator.html">Original Generator</a>
 	</div>
 
 	<div class="col-2a" id="editColumn">
@@ -23,12 +23,15 @@
 		<div id="patternMobile"></div>
 		<div class="radios row">
 		<div id="radioMode" class="parameters col-6">
-			<label class="container">Randomize
-			  <input type="radio" checked="checked" name="radioPattern" id="randomizeMode">
+			<label class="container">Mapped <!-- Changed normal to Likely since normal doesn't do much, need to disable row radio -->
+			  <input type="radio" name="radioPattern" checked="checked" id="mappedMode">
 			  <span class="checkmark"></span>
+			  <div class="tooltip info">i
+			  		<span class="hover-text">Rows or rounds determined by groups</span>
+			  </div>
 			</label>
-			<label class="container">Likely <!-- Changed normal to Likely since normal doesn't do much, need to disable row radio -->
-			  <input type="radio" name="radioPattern" id="likelyMode">
+			<label class="container">Weighted <!-- Changed normal to Likely since normal doesn't do much, need to disable row radio -->
+			  <input type="radio" name="radioPattern" id="weightedMode">
 			  <span class="checkmark"></span>
 			</label>
 		</div>
@@ -54,13 +57,46 @@
 				</div>
 			</div>
 
-			<div class="parameters col-6">
+			<!-- Hidden if you are doing a mapped mode -->
+			<div id="numRows" class="parameters col-6 hidden">
 				<label for="rowRange" class="input-label">Number of rows or rounds: <span id="demoRow"></span></label>
 				<div class="slidecontainer">
 					<input type="range" min="3" max="10" value="8" class="slider" id="myRangeRow" name="rowRange">
 				</div>
 			</div>
 		</div>
+
+		<div id="dataInputs" class="data-inputs row">
+			<div class="parameters col-3">
+				<label class="input-label" for="csv-data">Paste CSV data:<br>
+					<textarea id="csv-data" name="csv-data"></textarea>
+				</label>
+			</div>
+			<div class="parameters col-5">
+				<label class="input-label" for="group">Group By:<br>
+					<select>
+		        <option value="time">Time</option>
+		        <option value="heart-rate">Heart Rate</option>
+		      </select>
+		      &nbsp;matches&nbsp;
+					<input type="text" class="text" id="groupRegex" name="groupRegex" placeholder="/regex*/gm">
+				</label>
+			</div>
+			<div class="parameters col-4">
+				<label class="input-label" for="group">Fuction:<br>
+					<select>
+		        <option value="count">Count</option>
+		        <option value="average">Average</option>
+		        <option value="sum">Sum</option>
+		      </select>
+		      &nbsp;on&nbsp;
+					<select>
+		        <option value="time">Time</option>
+		        <option value="heart-rate">Heart Rate</option>
+		      </select>
+				</label>
+			</div>
+
 
 		</div>
 		
@@ -128,7 +164,7 @@
 
 			</div>
 	</div>
-	  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+	  <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="dataAnalyzer.js"></script>
     <script src="editCrochet.js"></script>
     <script src="visCrochet.js"></script>

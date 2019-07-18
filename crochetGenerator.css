@@ -5,6 +5,11 @@
 /** {
     box-sizing: border-box;
 }*/
+
+body {
+    margin:0;
+}
+
 .row::after {
     content: "";
     clear: both;
@@ -80,13 +85,7 @@
     font-family: 'Raleway', sans-serif;
     background: #F9ECE3;
     color: #040707;
-    /*padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 156px;*/
-    padding-top: 1%;
-    padding-bottom: 1%;
-    padding-left: 15%;
-    /*padding-right: 156px;*/
+    padding: 1% 10%;
     height: 50px;
 }
 
@@ -106,6 +105,41 @@ h2 {
     font-size: 100%;
     font-style: italic;
     color: #040707
+}
+
+.tooltip {
+    border: 1px solid #959188;
+    color: #959188;
+    font-size: 12px;
+    padding: 1px 7px;
+    border-radius: 50%;
+    width: 3px;
+    display: inline;
+}
+
+.tooltip:hover {
+    background: #959188;
+    color: #fff;
+}
+
+.tooltip .hover-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  top: -10px;
+  left: 125px;
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .hover-text {
+  visibility: visible;
 }
 
 #editColumn {
@@ -152,6 +186,8 @@ h2 {
 .container input {
     position: relative;
     opacity: 0;
+    margin: 0;
+    width: 0;
 }
 
 
@@ -220,6 +256,7 @@ h2 {
     opacity: 1;
     -webkit-transition: .2s;
     transition: opacity .2s;
+    margin-bottom: 10px;
 }
 
 /*.slider:hover {
@@ -262,6 +299,11 @@ h2 {
     padding-right: 10%;
 }*/
 
+#headerButton {
+    text-decoration: none;
+    float: right;
+}
+
 #saveButton {
     font-family: 'Raleway', sans-serif; 
 	background-color: #F9ECE3;
@@ -285,12 +327,12 @@ h2 {
     color: #040707;
 }
 
-#genButton {
+#genButton, #headerButton {
     font-family: 'Raleway', sans-serif; 
     background-color: #905E3A;
     border: none;
     /*border-radius: 7px;*/
-    width: 130px;
+    min-width: 130px;
     color: #fff;
     padding: 12px;
     text-align: center;
@@ -302,12 +344,11 @@ h2 {
     /*margin: 4px 2px;*/
     cursor: pointer;
 }
-#genButton:hover {
+#genButton:hover, #headerButton:hover {
     background-color: #462522;
     /*border: 1px solid #666;*/
     color: #fff;
 }
-
 
 
 .smallButton {

@@ -1,3 +1,16 @@
+function slugify(string) {
+  return string.toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+// var knownTypes = {
+//   'heart-rate': int,
+//   'heartrate': int,
+//   'bpm': int,
+//   'total': float,
+//   'time': Date.time,
+//   'date': Date,
+// }
+
 function DataAnalyzer(csvInputID, logicInputID) {
   this.csvInput = document.getElementById(csvInputID);
   this.logicInput = document.getElementById(logicInputID);
@@ -23,6 +36,9 @@ DataAnalyzer.prototype = {
 
   updateCSVData: function(e) {
     var data = d3.csvParse(this.csvInput.value);
+
+    
+
     var heartRateCount = {"<70": 0, "70-79": 0, "80-89": 0, "90-99": 0, "100-109":0, "110-119":0, "120-129":0, ">129": 0};
     for (var index in data) {
       var item = data[index];
@@ -51,6 +67,16 @@ DataAnalyzer.prototype = {
 
     this.organizedData = heartRateCount;
     this.dataLength = data.length;
+
+    var grouped = d3.nest()
+                    .key(function(d) {var tens = int(d["Heart Rate"]/10).toString(); return tens+'0-'+tens+'9';})
+                    .rollup(function(v) { return {
+                        count: v.length,
+                        total: d3.sum(v, function(d) { return d["Heart Rate"]; }),
+                        avg: d3.mean(v, function(d) { return d["Heart Rate"]; })
+                      }; })
+                    .entries(data);
+    console.log(grouped);
 
   },
 
