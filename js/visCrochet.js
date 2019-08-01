@@ -1,6 +1,5 @@
 /*
 CROCHET CHART GENERATOR
-Developed by Kira Street
 
 Generates different circular crochet charts using the 
 different crochet stitches increasing as you increase the number of rounds.
@@ -10,13 +9,9 @@ Make the randomize and normal toggles work
 Word pattern
 
 */
-/*
-Edited by Mikhaila Friske 
-*/
 
-// crochet stitches available for use
-var chain, dc, sc, doubleDC; // 
-var puff, dcCorner, shell, picot, dcChainCorner, chainCorner;
+var chain, dc, sc, doubleDC;
+var puff, dcCorner, shell, picot, dcChainCorner;
 
 var stitches = [];
 var equivNum = []; //array equivalent number of stitches
@@ -35,7 +30,6 @@ var decoration, pattern;
 
 var randomize = false; //booleans that detect if the button is pressed
 var normal = true;
-var data = false;
 var checked = false;
 var helper = false;
 
@@ -97,9 +91,6 @@ var picotSumZero, picotSumOne, picotSumTwo, picotSumThree, picotSumFour, picotSu
 var puffSumZero, puffSumOne, puffSumTwo, puffSumThree, puffSumFour, puffSumFive, puffSumSix, puffSumSeven;
 
 
-// Data analyzer tool
-var da = new DataAnalyzer('csv-data', 'analyze');
-da.init();
 
 ///////////////////////
 
@@ -317,10 +308,8 @@ function draw() {
   var pattern = " ";
   var patternArray = [];
 
-  var randomCheck = document.getElementById("randomizeMode") ? document.getElementById("randomizeMode").checked : false;
-  var roundCheck = document.getElementById("roundsMode") ? document.getElementById("roundsMode").checked : false;
-  var dataCheck = document.getElementById("dataMode") ? document.getElementById("dataMode").checked : false;
-  
+  var randomCheck = document.getElementById("randomizeMode").checked;
+  var roundCheck = document.getElementById("roundsMode").checked;
 
 
 
@@ -344,7 +333,7 @@ function draw() {
 
   // Likely AND ROUNDS
     
-    if (!randomCheck && !dataCheck && roundCheck) {
+    if (!randomCheck && roundCheck) {
       for (var j = 1; j <= rows; j++) {
         if (j == 1) {
           
@@ -367,7 +356,7 @@ function draw() {
     }
 
     //Likely AND ROWS
-    else if (!randomCheck && !dataCheck && !roundCheck) {
+    else if (!randomCheck && !roundCheck) {
       for (var j = 1; j <= rows; j++) {
         if (j == 1) {
           
@@ -467,37 +456,6 @@ function draw() {
       // }
       // listText += "</ol>";
       // document.getElementById("patternDiv").innerHTML = listText;
-    }
-    
-    incCounter++;
-
-  }
-
-  // Data Generator
-  for (i = 1; i <= rows; i++) {
-    var stitchInd = da.getRandomItemWeighted();
-    var stitchIndTwo = da.getRandomItemWeighted();
-    console.log(stitchInd, stitchIndTwo);
-    //var basicStitchInd = round(random(0,basicStitches.length-1));
-    //var specialStitchInd = round(random(0,specialStitches.length-1));
-
-    var incNum = i*initStitchNum;
-
-    
-    //DATA AND ROUNDS
-    if (dataCheck && roundCheck) {
-      
-      var chainRound = new CrochetRound(stitches[stitchInd], stitches[stitchIndTwo]);
-      chainRound.repeatAround(incNum, i*r);
-    }
-
-
-    //DATA AND ROWS
-    else if (dataCheck && !roundCheck) {
-      
-      var chainRound = new CrochetRound(stitches[stitchInd], stitches[stitchIndTwo]);
-      chainRound.rowRepeat(initStitchNum, i*r);
-
     }
     
     incCounter++;

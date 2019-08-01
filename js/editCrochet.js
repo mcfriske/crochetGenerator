@@ -20,7 +20,7 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
     // modal.style.display = "block";
-    modal.style.display = modal.style.display === "block" ? "none" : "block";
+    modal.style.display = modal.style.display == "block" ? "none" : "block";
 }
 
 
@@ -31,17 +31,18 @@ sliderRow.oninput = function() {
   outputRow.innerHTML = this.value;
 }
 
+
 // html2canvas(document.querySelector("#saveButton")).then(canvas => {
 //     document.body.appendChild(canvas)
 // });
 
-document.querySelector('#radioMode').onchange = function(e) { 
-  var id = e.target.id;
-  if (id === "weightedMode") {
-    document.getElementById("numRows").classList.remove('hidden');
-    // document.getElementById("sliders").classList.add('hidden');
-  } else {
-    // document.getElementById("sliders").classList.remove('hidden');
-    document.getElementById("numRows").classList.add('hidden');
-  }
-};
+// document.querySelector('#radioMode').onchange = function(e) { 
+//   var id = e.target.id;
+//   if (id == "weightedMode") {
+//     document.getElementById("numRows").classList.remove('hidden');
+//     // document.getElementById("sliders").classList.add('hidden');
+//   } else {
+//     // document.getElementById("sliders").classList.remove('hidden');
+//     document.getElementById("numRows").classList.add('hidden');
+//   }
+// };

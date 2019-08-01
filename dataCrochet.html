@@ -17,96 +17,83 @@
 		</div>
 		<a id="headerButton" href="/crochetGenerator.html">Original Generator</a>
 	</div>
+	
 
 	<div class="col-2a" id="editColumn">
 
-		<div id="patternMobile"></div>
-		<div class="radios row">
-		<div id="radioMode" class="parameters col-6">
-			<label class="container">Mapped <!-- Changed normal to Likely since normal doesn't do much, need to disable row radio -->
-			  <input type="radio" name="radioPattern" checked="checked" id="mappedMode">
-			  <span class="checkmark"></span>
-			  <div class="tooltip info">i
-			  		<span class="hover-text">Rows or rounds determined by groups</span>
-			  </div>
-			</label>
-			<label class="container">Weighted <!-- Changed normal to Likely since normal doesn't do much, need to disable row radio -->
-			  <input type="radio" name="radioPattern" id="weightedMode">
-			  <span class="checkmark"></span>
-			</label>
+		<div id="patternMobile">
+			<div class="parameters col-6" id="buttons">
+					
+			</div>
 		</div>
-
+		<div class="radios row">
+		
 		<div class="parameters col-6">
+			<label style="line-height:150%;" for="rowRange" class="input-label">Crochet Construction:</label>
 			<label class="container">Rounds
-			  <input type="radio" checked="checked" name="radioConstruction" id="roundsMode">
+			  <input type="radio" name="radioConstruction" id="roundsMode" checked="checked">
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container">Rows
-			  <input type="radio" name="radioConstruction" id="rowsMode">
+			  <input type="radio" name="radioConstruction" id="rowMode">
 			  <span class="checkmark"></span>
 			</label>
-		</div>
-	</div>
 
-		<!-- Sliders -->
-		<div id="sliders" class="sliders row">
-			<div class="parameters col-6">
-				<label for="stitchRange" class="input-label">Number of initial stitches: <span id="demoStitch"></span></label>
+			<label for="stitchRange" class="input-label">Number of initial stitches: <span id="demoStitch"></span></label>
 				<div class="slidecontainer">
-					<input type="range" min="3" max="10" value="8" class="slider" id="myRangeStitch" name="stitchRange">
+					<input type="range" min="3" max="10" value="8" class="slider" id="stitchRange" name="stitchRange">
 				</div>
-			</div>
 
-			<!-- Hidden if you are doing a mapped mode -->
-			<div id="numRows" class="parameters col-6 hidden">
 				<label for="rowRange" class="input-label">Number of rows or rounds: <span id="demoRow"></span></label>
 				<div class="slidecontainer">
-					<input type="range" min="3" max="10" value="8" class="slider" id="myRangeRow" name="rowRange">
+					<input type="range" min="3" max="10" value="8" class="slider" id="rowRange" name="rowRange">
 				</div>
+				<label style="line-height:150%;" for="rowRange" class="input-label">Order of Rows/Rounds:</label>
+				<label class="container">Ascending
+				  <input type="radio" name="groupOrder" id="ascending" checked="checked"/>
+				  <span class="checkmark"></span>
+				</label>
+				<label class="container">Descending
+				  <input type="radio" name="groupOrder" id="descending"/>
+				  <span class="checkmark"></span>
+				</label>
+		</div>
+		<div class="parameters col-6">
+			<button style="width:50%;" onclick="da.show('modalForm')" id="genButton">Add/Edit CSV Data</button>
+			<br/><br/>
+			<table id="groupTable">
+					<thead>
+						<th width="30%"></th>
+						<th width="40%">Group</th>
+						<th width="30%">Value</th>
+					</thead>
+					<tbody>
+						<tr >
+							<td colspan="3" class="even">Please add CSV data and group it</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class='pagination-container' >
+				<nav>
+				  <ul class="pagination" id="pagination">
+				  	<li data-page="prev" id="prev">
+				     <span> < <span class="sr-only">(current)</span></span>
+				    </li>
+				   <!--	Here the JS Function Will Add the Rows -->
+        	<li data-page="next" id="next">
+			       <span> > <span class="sr-only">(current)</span></span>
+			    </li>
+				  </ul>
+				</nav>
 			</div>
 		</div>
-
-		<div id="dataInputs" class="data-inputs row">
-			<div class="parameters col-3">
-				<label class="input-label" for="csv-data">Paste CSV data:<br>
-					<textarea id="csv-data" name="csv-data"></textarea>
-				</label>
-			</div>
-			<div class="parameters col-5">
-				<label class="input-label" for="group">Group By:<br>
-					<select>
-		        <option value="time">Time</option>
-		        <option value="heart-rate">Heart Rate</option>
-		      </select>
-		      &nbsp;matches&nbsp;
-					<input type="text" class="text" id="groupRegex" name="groupRegex" placeholder="/regex*/gm">
-				</label>
-			</div>
-			<div class="parameters col-4">
-				<label class="input-label" for="group">Fuction:<br>
-					<select>
-		        <option value="count">Count</option>
-		        <option value="average">Average</option>
-		        <option value="sum">Sum</option>
-		      </select>
-		      &nbsp;on&nbsp;
-					<select>
-		        <option value="time">Time</option>
-		        <option value="heart-rate">Heart Rate</option>
-		      </select>
-				</label>
-			</div>
-
-
-		</div>
+	</div>
 		
 	</div>
-
 	<div class="col-12" id="buttons">
-			<button onclick="generate()" id="genButton">Generate</button>
-			<button onclick="savePattern()" id="saveButton">Save</button>
+			<button class"button" onclick="generate()" id="genButton">Generate</button>
+			<button class="button-primary" onclick="savePattern()" id="saveButton">Save</button>
 	</div>
-
 
 	<!-- for the word pattern javascript -->
 	<!-- <div style="width: 100%;">
@@ -164,12 +151,126 @@
 
 			</div>
 	</div>
-	  <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="dataAnalyzer.js"></script>
-    <script src="editCrochet.js"></script>
-    <script src="visCrochet.js"></script>
-    <script src="html2canvas.js"></script>
+	<div id="modalForm" class="modal-form hidden">
+		<div class="modal-content">
+			<div id="stepper" class="stepper">
+				<div id="stepTab" class="step current" onclick="da.openStep(event, 'step1', 0)"><span class="icon">1</span>Input Data</div>
+				<div class="step-between-line"></div>
+				<div id="stepTab" class="step" onclick="da.openStep(event, 'step2', 0)"><span class="icon">2</span>Configure</div>
+				<div class="step-between-line"></div>
+				<div id="stepTab" class="step" onclick="da.openStep(event, 'step3', 0)"><span class="icon">3</span>Crochet Stitches</div>
+			</div>
+			<div class="stepper-content">
+				<div id="step1" class="step-content">
+					<label class="input-label" for="csv-data">Paste CSV data:</label><br/>
+					<textarea id="csv-data" name="csv-data"></textarea>
+				</div>
+				<div id="step2" class="step-content hidden">
+					<form id="settingsForm">
+						<div class="parameters">
+							<label class="input-label" for="group">Group&nbsp;
+								<select name="groupColumns" id="columnOptions">
+					        
+					      </select>
+					      &nbsp;by&nbsp;
+								<select id="groupingOptions">
+					        
+					      </select>
+							</label>
+						</div>
+						<div class="parameters">
+								<label for="uncertaintyRange" class="input-label">Uncertainty: <span id="demoUncertainty"></span>%</label>
+								<div class="slidecontainer">
+									<input type="range" class="slider" id="uncertaintyRange" name="uncertaintyRange">
+								</div>
+							</div>
+						<div class="parameters">
+							<label class="input-label" for="group">
+								Evaluate&nbsp;
+								<select name="functionColumns" id="columnOptions">
+					        
+					      </select>
+					      &nbsp;by&nbsp;
+								<select id="functionOptions">
+					        
+					      </select>
+							</label>
+						</div>
+					</form>
+				</div>
+				<div id="step3" class="step-content hidden">
+					<form id="stitchForm">
+						<label class="input-label">Stitches</label>
+						<p>Please provide ranges for the crochet stitches (ex. 34,13,90-109).</p>
+						<br/>
+						<div class="parameters col-6 stitches">
+							<label for="chain" class="icon-label">
+								<div class="square-icon"><img title="chain stitch" src="stitches/chain.png"/></div>
+								<input type="text" name="stitch" id="chain">
+							</label>
+							<label for="singleCrochet" class="icon-label">
+								<div class="square-icon"><img title="single stitch" src="stitches/sc.png"/></div>
+								<input type="text" name="stitch" id="singleCrochet">
+							</label>
+							<label for="doubleCrochet" class="icon-label">
+								<div class="square-icon"><img src="stitches/dc.png"/></div>
+								<input type="text" name="stitch" id="doubleCrochet">
+							</label>
+							<label for="doubleDC" class="icon-label">
+								<div class="square-icon"><img src="stitches/double_dc.png"/></div>
+								<input type="text" name="stitch" id="doubleDC">
+							</label>
+							<label for="puff" class="icon-label">
+								<div class="square-icon"><img src="stitches/puff.png"/></div>
+								<input type="text" name="stitch" id="puff">
+							</label>
+						</div>
+						<div class="parameters col-6 stitches">
+							<label for="dcChainCorner" class="icon-label">
+								<div class="square-icon"><img src="stitches/dc_ch_corner.png"/></div>
+								<input type="text" name="stitch" id="dcChainCorner">
+							</label>
+							<label for="threeChainCorner" class="icon-label">
+								<div class="square-icon"><img src="stitches/dc_3ch_corner.png"/></div>
+								<input type="text" name="stitch" id="threeChainCorner">
+							</label>
+							<label for="shell" class="icon-label">
+								<div class="square-icon"><img src="stitches/shell.png"/></div>
+								<input type="text" name="stitch" id="shell">
+							</label>
+							<label for="picot" class="icon-label">
+								<div class="square-icon"><img src="stitches/picot.png"/></div>
+								<input type="text" name="stitch" id="picot">
+							</label>
+						</div>
+					</form>
+				</div>
+
+				<div id="navButtons">
+					<button class="button hidden" onclick="da.openStep(event, null, -1)" id="prevButton">Prev</button>
+					<button class="button-primary" onclick="da.openStep(event, null, 1)" id="nextButton">Next</button>
+					<button class="button-primary hidden" onclick="da.show('modalForm');" id="goButton">Go</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+	  <script src="https://d3js.org/d3.v4.min.js"></script>
+	  <script src="pagination.js"></script>
+    <script src="js/dataCrochet.js"></script>
+    <script src="js/crochetObject.js"></script>
+    <script src="dataAnalyzer.js"></script>
+    <!--<script src="editCrochet.js"></script>
+    <script src="visCrochet.js"></script>
+    <script src="html2canvas.js"></script>-->
+    <script>
+    var co = new CrochetObject();
+    var pa = new Pagination('groupTable', 4, co);
+		var da = new DataAnalyzer(co, pa);
+		</script>
+    <script src="js/visDataCrochet.js"></script>
 
 </body>
 </html>
