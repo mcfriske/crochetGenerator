@@ -166,8 +166,8 @@
 					<textarea id="csv-data" name="csv-data"></textarea>
 				</div>
 				<div id="step2" class="step-content hidden">
-					<form id="settingsForm">
-						<div class="parameters">
+					<form style="width:100%;" id="settingsForm">
+						<div class="parameters col-8">
 							<label class="input-label" for="group">Group&nbsp;
 								<select name="groupColumns" id="columnOptions">
 					        
@@ -177,14 +177,8 @@
 					        
 					      </select>
 							</label>
-						</div>
-						<div class="parameters">
-								<label for="uncertaintyRange" class="input-label">Uncertainty: <span id="demoUncertainty"></span>%</label>
-								<div class="slidecontainer">
-									<input type="range" class="slider" id="uncertaintyRange" name="uncertaintyRange">
-								</div>
-							</div>
-						<div class="parameters">
+							<br/>
+							<br/>
 							<label class="input-label" for="group">
 								Evaluate&nbsp;
 								<select name="functionColumns" id="columnOptions">
@@ -196,6 +190,21 @@
 					      </select>
 							</label>
 						</div>
+						<div class="parameters col-4">
+							<label style="line-height:150%;" for="randomSelect" class="input-label">Random Selection:</label>
+								<label class="container">Random
+								  <input type="radio" name="randomSelect" id="trueRandom" checked="checked">
+								  <span class="checkmark"></span>
+								</label>
+								<label class="container">Weighted
+								  <input type="radio" name="randomSelect" id="weightedRandom">
+								  <span class="checkmark"></span>
+								</label>
+								<label for="uncertaintyRange" class="input-label">Uncertainty: <span id="demoUncertainty"></span>%</label>
+								<div class="slidecontainer">
+									<input type="range" class="slider" id="uncertaintyRange" name="uncertaintyRange">
+								</div>
+							</div>
 					</form>
 				</div>
 				<div id="step3" class="step-content hidden">
@@ -258,10 +267,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 	  <script src="https://d3js.org/d3.v4.min.js"></script>
-	  <script src="pagination.js"></script>
+	  <script src="js/pagination.js"></script>
     <script src="js/dataCrochet.js"></script>
     <script src="js/crochetObject.js"></script>
-    <script src="dataAnalyzer.js"></script>
+    <script src="js/dataAnalyzer.js"></script>
     <!--<script src="editCrochet.js"></script>
     <script src="visCrochet.js"></script>
     <script src="html2canvas.js"></script>-->
