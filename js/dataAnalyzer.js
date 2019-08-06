@@ -371,9 +371,18 @@ DataAnalyzer.prototype = {
                  .length, v.length];
       case 'most-frequent-hour':
         var grouped = d3.nest().key(function(d){return moment(d[functionColumn], this.timeFormat).hours()}.bind(this))
-                        .entries(v)
-        console.log(grouped);
-        return [v.length, v.length];
+                        .entries(v);
+        var hour = grouped[0].key;
+        var max = grouped[0].values.length;
+        for (var i = 1; i < grouped.length; i++) {
+          var group = grouped[i];
+          if (max < group.values.length) {
+            max = group.values.length;
+            hour = group.key;
+          }
+        }
+        console.log(hour);
+        return [hour, v.length];
       default: // this is count
         return [v.length, v.length];
     }
@@ -400,20 +409,26 @@ DataAnalyzer.prototype = {
         startOnes = start % 10;
         stopTens = Math.floor(stop / 10);
         stopOnes = stop % 10;
+        var z = ""
 
         for (var j = startTens; j <= stopTens; j++) {
+          if (j === 0) {
+            z = "?";
+          } else {
+            z = "";
+          }
           if (j != stopTens) {
             if (j ===  startTens) {
-              regexString += `${j}[${startOnes}-9]|`;
+              regexString += `${j}${z}[${startOnes}-9]|`;
             } else {
-              regexString += `${j}[0-9]|`;
+              regexString += `${j}${z}[0-9]|`;
             }
           }
           else {
             if (j === startTens) {
-              regexString += `${j}[${startOnes}-${stopOnes}]|`
+              regexString += `${j}${z}[${startOnes}-${stopOnes}]|`
             } else {
-              regexString += `${j}[0-${stopOnes}]|`
+              regexString += `${j}${z}[0-${stopOnes}]|`
             }
           }
         }
@@ -422,7 +437,7 @@ DataAnalyzer.prototype = {
       }
     }
     regexString = regexString.replace(/\|$/g, ')'); // replace last pipe with closing parenthesis
-
+    console.log(regexString);
     this.crochetObject.addStitchRegex(stitchID, regexString);
 
 
