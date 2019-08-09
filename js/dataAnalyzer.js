@@ -35,10 +35,12 @@ DataAnalyzer.prototype = {
     this.numberKeyHandler = this.numberKey.bind(this);
     this.timeKeyHandler = this.timeKey.bind(this);
     this.dateKeyHandler = this.dateKey.bind(this);
+    this.stringKeyHandler = this.stringKey.bind(this);
     // Value Groupings
     this.numberValueHandler = this.numberValue.bind(this);
     this.timeValueHandler = this.timeValue.bind(this);
-    // this.dateValueHandler = this.dateValue.bind(this);
+    this.dateValueHandler = this.dateValue.bind(this);
+    this.stringValueHandler = this.stringValue.bind(this);
 
     // Sorting
     this.sortKeysHandler = this.sortKeys.bind(this);
@@ -137,8 +139,11 @@ DataAnalyzer.prototype = {
       case 'date':
         keyHandler = this.dateKeyHandler;
         break;
-      default:
+      case 'number':
         keyHandler = this.numberKeyHandler;
+        break;
+      default:
+        keyHandler = this.stringKeyHandler;
     }
 
     switch(this.functionType) {
@@ -148,11 +153,13 @@ DataAnalyzer.prototype = {
       case 'date':
         valueHandler = this.dateValueHandler;
         break;
-      default:
+      case 'number':
         valueHandler = this.numberValueHandler;
+        break;
+      default:
+        valueHandler = this.stringValueHandler;
     }
 
-    console.log(this.functionType, this.keyType);
     var grouped = d3.nest()
                     .key(keyHandler)
                     .rollup(valueHandler)
@@ -160,7 +167,7 @@ DataAnalyzer.prototype = {
                     // .sort(this.sortNumberKeys);
 
     this.organizedData = grouped;
-    this.pagination.setRows(this.organizedData).getPagination();
+    this.sortKeys();
   },
 
   updateDataCrochet: function() {
@@ -168,21 +175,41 @@ DataAnalyzer.prototype = {
   },
 
   sortKeys: function() {
-    this.organizedData = this.organizedData.sort(this.sortNumberKeys);
+    switch (this.keyType) {
+      case "number":
+        this.organizedData = this.organizedData.sort(this.sortNumberKeys);
+        break;
+      default:
+        this.organizedData = this.organizedData.sort(this.defaultSortKeys);
+    }
+    
     this.pagination.setRows(this.organizedData).getPagination();
   },
 
   getStitchIndex: function(row) {
-    var key, value, weight;
-    var selected = this.crochetObject.selectedGroups.sort(this.sortNumberKeys);
-    var weighted = Math.random() + (this.settingsForm.uncertaintyRange.value / 100);
+    var key, value, weight, selected;
+    var l = this.rawData.length;
+    switch (this.keyType) {
+      case 'number':
+        selected = this.crochetObject.selectedGroups.sort(this.sortNumberKeys);
+        break;
+      default:
+        selected = this.crochetObject.selectedGroups.sort(this.defaultSortKeys);
+
+    }
+
+    var uncertain = Math.random() + (this.settingsForm.uncertaintyRange.value / 100);
+    var weightedCheck = document.getElementById('weightedRandom').checked;
 
     if (row <= selected.length) {
       key = selected[row - 1];
       [value, weight] = this.organizedData.find(item => item.key === key).value;
-      if (weighted < 1) {
+      if (uncertain < 1) {
         return co.getStitchIndex(value);
 
+      } else if (weightedCheck) {
+        value = this.getRandomItemWeighted();
+        return co.getStitchIndex(value);
       } else {
         return round(random(0,8));
       }
@@ -203,13 +230,10 @@ DataAnalyzer.prototype = {
     for (var index in this.organizedData) {
       key = this.organizedData[index].key;
       [value, weight] = this.organizedData[index].value;
-      console.log(key, value, weight);
-      // weight = this.organizedData[key];
-      // rand = rand - weight;
-      // if (rand <= 0) {
-      //   console.log(key);
-      //   // return keyToStitches[key];
-      // }
+      rand = rand - weight;
+      if (rand <= 0) {
+        return value;
+      }
     }
   },
 
@@ -247,8 +271,71 @@ DataAnalyzer.prototype = {
     return key;
   },
 
-  dateKey: function(d) {
+  stringKey: function(d) {
+    var groupColumn = this.settingsForm.groupColumns.value;
+    var groupingOption = this.settingsForm.groupingOptions.value;
 
+    for (var id in d) {
+      if (slugify(id) == groupColumn) {
+        groupColumn = id;
+        break;
+      }
+    }
+    var key = d[groupColumn];
+    var words = key.split(/\s+/g);
+    this.keyType = "string";
+
+    switch(groupingOption) {
+      case 'first-letter':
+        key = key[0].toUpperCase();
+        break;
+      case 'length':
+        key = key.length;
+        this.keyType = "number";
+        break;
+      case 'first-word':
+        key = words[0];
+        break;
+      case 'last-word':
+        key = words[words.length-1];
+        break;
+    }
+
+    return key;
+  },
+
+  dateKey: function(d) {
+    var groupColumn = this.settingsForm.groupColumns.value;
+    var groupingOption = this.settingsForm.groupingOptions.value;
+
+    for (var id in d) {
+      if (slugify(id) == groupColumn) {
+        groupColumn = id;
+        break;
+      }
+    }
+    var value = d[groupColumn];
+    if (!this.dateFormat && !value.match(this.dateFormat)) {
+      this.dateFormat = getDateRegex(value);
+    }
+
+    console.log(this.dateFormat);
+    var date = moment(value, this.dateFormat);
+    var key = ""
+    switch(groupingOption) {
+      case 'day':
+        key = date.format("MMM DD")
+        break;
+      case 'month':
+        key = date.format("MMMM");
+        break;
+      case 'year':
+        key = date.format("YYYY");
+        break;
+      default:
+        key = date.format("YYYY/MM/DD");
+    }
+    return key;
   },
 
   timeKey: function(d) {
@@ -315,6 +402,20 @@ DataAnalyzer.prototype = {
     }
   },
 
+  defaultSortKeys: function(a,b) {
+    if (a instanceof Object) {
+      a = (a.key);
+      b = (b.key);
+    } 
+    var ascending = document.getElementById('ascending').checked;
+
+    if (ascending) {
+      return a < b ? -1 : a === b ? 0 : 1;
+    } else {
+      return a > b ? -1 : a === b ? 0 : 1;
+    }
+  },
+
   numberValue: function(v) {
     var functionColumn = this.settingsForm.functionColumns.value;
     var functionOption = this.settingsForm.functionOptions.value;
@@ -345,6 +446,29 @@ DataAnalyzer.prototype = {
         return [v.length, v.length];
     }
   }, 
+
+  stringValue: function(v) {
+    var functionColumn = this.settingsForm.functionColumns.value;
+    var functionOption = this.settingsForm.functionOptions.value;
+    var columns = this.rawData.columns;
+
+    for (var id in columns) {
+      if (slugify(columns[id]) == functionColumn) {
+        functionColumn = columns[id];
+        break;
+      }
+    }
+
+    switch(functionOption) {
+      case 'unique-count':
+        return [d3.nest()
+                 .key(function(d) {return d[functionColumn]})
+                 .entries(v)
+                 .length, v.length];
+      default: // this is count
+        return [v.length, v.length];
+    }
+  },
 
   timeValue: function(v) {
     var functionColumn = this.settingsForm.functionColumns.value;
@@ -381,8 +505,62 @@ DataAnalyzer.prototype = {
             hour = group.key;
           }
         }
-        console.log(hour);
         return [hour, v.length];
+      default: // this is count
+        return [v.length, v.length];
+    }
+    
+  },
+
+  dateValue: function(v) {
+    var functionColumn = this.settingsForm.functionColumns.value;
+    var functionOption = this.settingsForm.functionOptions.value;
+    var columns = this.rawData.columns;
+
+    for (var id in columns) {
+      if (slugify(columns[id]) == functionColumn) {
+        functionColumn = columns[id];
+        break;
+      }
+    }
+
+    var value = v[0][functionColumn];
+    if (!this.dateFormat && !value.match(this.dateFormat)) {
+      this.dateFormat = getDateRegex(value);
+    }
+
+    switch(functionOption) {
+      case 'unique-count':
+        return [d3.nest()
+                 .key(function(d) {return d[functionColumn]})
+                 .entries(v)
+                 .length, v.length];
+      case 'most-frequent-month':
+        var grouped = d3.nest().key(function(d){return moment(d[functionColumn], this.dateFormat).format("MMMM")}.bind(this))
+                        .entries(v);
+        var month = grouped[0].key;
+        var max = grouped[0].values.length;
+        for (var i = 1; i < grouped.length; i++) {
+          var group = grouped[i];
+          if (max < group.values.length) {
+            max = group.values.length;
+            month = group.key;
+          }
+        }
+        return [month, v.length];
+      case 'most-frequent-day':
+        var grouped = d3.nest().key(function(d){return moment(d[functionColumn], this.dateFormat).format("MMM DD")}.bind(this))
+                        .entries(v);
+        var day = grouped[0].key;
+        var max = grouped[0].values.length;
+        for (var i = 1; i < grouped.length; i++) {
+          var group = grouped[i];
+          if (max < group.values.length) {
+            max = group.values.length;
+            day = group.key;
+          }
+        }
+        return [day, v.length];
       default: // this is count
         return [v.length, v.length];
     }
@@ -437,7 +615,6 @@ DataAnalyzer.prototype = {
       }
     }
     regexString = regexString.replace(/\|$/g, ')'); // replace last pipe with closing parenthesis
-    console.log(regexString);
     this.crochetObject.addStitchRegex(stitchID, regexString);
 
 

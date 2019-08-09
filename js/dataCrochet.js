@@ -1,12 +1,12 @@
 function slugify(string) {
-  return string.toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9-]/g, '');
+  return string.toLowerCase().replace(/[\s\_]/g, '-').replace(/[^a-z0-9-]/g, '');
 }
 
 var typeOptions = {
   'number': ['Default', 'Tens', 'Hundreds', 'Thousands'],
   'date': ['Default', 'Day', 'Month', 'Year'],
   'time': ['Default', 'Minute', '15 Minutes', 'Half Hour', 'Hour'],
-  'string': ['Default', 'First Letter', 'Length'],
+  'string': ['Default', 'First Letter', 'Length', 'First Word', 'Last Word'],
   'unknown': ['Default']
 }
 
@@ -30,19 +30,54 @@ var knownTypes = {
   'name': 'string',
   'temperature': 'number',
   'temp': 'number',
+  'year': 'year',
+  'month': 'month',
+  'hero': 'string', 
+  'villain': 'string',
+  'movie': 'string',
+  'movie-title': 'string',
+  'title': 'string',
+  'release-date': 'date',
+  'default': 'unknown'
 }
 
 var timeFormat = [{regex: /^(0?[1-9]|1[0-2]):[0-5][0-9]\s*[aApP][mM]?$/gm,format: 'hh:mm a'},
                   {regex: /^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/gm, format: 'HH:mm'},
                   {regex: /^(0?[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$/gm, format: 'HH:mm:ss'},
                   {regex: /^(0?[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}\.\d{1,3}$/gm, format: 'HH:mm:ss.SSS'}]
-var dateFormat = []
+
+var dateFormat = [{regex: /^(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])\/([12]\d{3}|\d{2})$/gm, format: 'MM/DD/YYYY'},
+                  {regex: /^(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01])-([12]\d{3}|\d{2})$/gm, format: 'MM-DD-YYYY'},
+                  {regex: /^([12]\d{3})-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01])$/gm, format: 'YYYY-MM-DD'},
+                  {regex: /^([12]\d{3})\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])$/gm, format: 'YYYY/MM/DD'},
+                  {regex: /^(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember|t)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(0?[1-9]|[12]\d|3[01])\s*,\s+([12]\d{3}|\d{2})$/gm, 
+                   format: 'MMMM DD, YYYY'}]
+var monthFormat = [
+                  {regex: /^$/gm, format: 'MMM'},
+                  {regex: /^$/gm, format: 'MMMM'},]
+var dayFormat = [
+                  {regex: /^$/gm, format: 'D'},
+                  {regex: /^$/gm, format: 'Do'},
+                  {regex: /^$/gm, format: 'dd'},
+                  {regex: /^$/gm, format: 'ddd'},
+                  {regex: /^$/gm, format: 'dddd'}]
+var yearFormat = [
+                  {regex: /^$/gm, format: 'YYYY'},
+                  ]
 
 function getKnownTypeOptions(column) {
-  return typeOptions[knownTypes[column]];
+  if (column in knownTypes){
+    return typeOptions[knownTypes[column]];
+  } else {
+    return typeOptions['unknown'];
+  }
 }
 function getFunctionOptions(column) {
-  return functionOptions[knownTypes[column]];
+  if (column in knownTypes){
+    return functionOptions[knownTypes[column]];
+  } else {
+    return functionOptions['unknown'];
+  }
 }
 
 function getTimeRegex(value) {
@@ -52,7 +87,21 @@ function getTimeRegex(value) {
     format = timeFormat[index].format;
 
     if (value.match(regex)) {
-      console.log(format);
+      // console.log(format);
+      return format;
+    }    
+  }
+  return null;
+}
+
+function getDateRegex(value) {
+  var regex, format;
+  for (var index in dateFormat) {
+    regex = dateFormat[index].regex;
+    format = dateFormat[index].format;
+
+    if (value.match(regex)) {
+      // console.log(format);
       return format;
     }    
   }

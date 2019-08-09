@@ -12,7 +12,7 @@ function CrochetObject() {
 CrochetObject.prototype = {
   init: function() {
     this.rowCheck = this.$rowConstruction.checked;
-    console.log(this.rowCheck);
+    // console.log(this.rowCheck);
     this.groupChangeHandler = this.handleGroupChange.bind(this);
   },
 
@@ -25,7 +25,7 @@ CrochetObject.prototype = {
     } else {
       this.deleteGroup(key);
     }
-    console.log(this.selectedGroups);
+    // console.log(this.selectedGroups);
   },
 
   addGroup: function(key) {
